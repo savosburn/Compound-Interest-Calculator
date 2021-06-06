@@ -17,8 +17,8 @@ public class App {
         // Input
         double principal = myApp.readPrincipal();
         double rate = myApp.readRate();
-        int numYears = myApp.readYears();
-        int numCompounds = myApp.readNumCompounds();
+        double numYears = myApp.readYears();
+        double numCompounds = myApp.readNumCompounds();
 
         // Calculations
         String investment = myApp.calculateInvestment(principal, rate, numYears, numCompounds);
@@ -31,35 +31,85 @@ public class App {
 
     public double readPrincipal() {
         System.out.print("What is the principal amount? ");
+
+        // User can only enter number
+        while (!in.hasNextDouble()) {
+            System.out.print("Invalid amount. Enter again: ");
+            in.next();
+        }
+
         return in.nextDouble();
     }
 
     public double readRate() {
-        System.out.print("What is the rate? ");
+        System.out.print("What is the rate's percentage? (ex: 4.3) ");
+
+        // User can only enter number
+        while (!in.hasNextDouble()) {
+            System.out.print("Invalid rate. Enter again: ");
+            in.next();
+        }
+
         return in.nextDouble() / 100;
     }
 
-    public int readYears() {
+    public double readYears() {
         System.out.print("What is the number of years? ");
-        return in.nextInt();
+
+        // User can only enter number
+        while (!in.hasNextDouble()) {
+            System.out.print("Invalid number. Enter again: ");
+            in.next();
+        }
+
+        return in.nextDouble();
     }
 
-    public int readNumCompounds() {
+    public double readNumCompounds() {
         System.out.print("What is the number of times the interest is compounded per year? ");
-        return in.nextInt();
+
+        // User can only enter number
+        while (!in.hasNextDouble()) {
+            System.out.print("Invalid number. Enter again: ");
+            in.next();
+        }
+
+        return in.nextDouble();
     }
 
-    public String calculateInvestment(double principal, double rate, int numYears, int numCompounds){
+    public String calculateInvestment(double principal, double rate, double numYears, double numCompounds){
         DecimalFormat df = new DecimalFormat("'$'#.##");
         return df.format(principal * Math.pow((1 + rate / numCompounds), (numCompounds * numYears)));
     }
 
-    public String generateString(double principal, double rate, int numYears, int numCompounds, String investment) {
-        return String.format("%d invested at %.1f%% for %d years compounded %d times per year is %s.",
-                (int) principal, rate * 100, numYears, numCompounds, investment);
+    public String generateString(double principal, double rate, double numYears, double numCompounds, String investment) {
+        int newCompounds, newYears, newPrincipal;
+
+        String compounds = Double.toString(numCompounds);
+        String years = Double.toString(numYears);
+        String principalVal = Double.toString(principal);
+
+        if (numCompounds % 1 == 0) {
+            newCompounds = (int) numCompounds;
+            compounds = String.format("%d", newCompounds);
+        }
+
+        if (numYears % 1 == 0) {
+            newYears = (int) numYears;
+            years = String.format("%d", newYears);
+        }
+
+        if (principal % 1 == 0) {
+            newPrincipal = (int) principal;
+            principalVal = String.format("%d", newPrincipal);
+        }
+
+        return String.format("%s invested at %.1f%% for %s years compounded %s times per year is %s.",
+                principalVal, rate * 100, years, compounds, investment);
     }
 
     public void output(String outputString) {
+
         System.out.println(outputString);
     }
 }
